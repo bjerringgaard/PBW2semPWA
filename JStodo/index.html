@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="css/style.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body onload="doStuff()">
+	
+	<h1>Todo List</h1>
+	<form name="form" onsubmit="event.preventDefault();">
+		<input type="text" id="todo_input" name="todo_input" onfocus="clearThis(this)"/>
+		<button onclick="add(this.form)">Add</button>
+		<button onclick="sort()">Sort</button>
+		<button onclick="reverse()">Reverse</button>
+	</form>
+
+	<ul id="todo_list">
+	</ul>
+
+	<script src="js/main.js"></script>
+</body>
+</html>

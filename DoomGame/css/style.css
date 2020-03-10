@@ -1,0 +1,76 @@
+#vue-app {
+	width: 500px;
+	margin: 0 auto;
+}
+
+#controls {
+display: flex;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+button {
+	margin-right: 10px;
+	background-color: darkgray;
+	color: white;
+	width: 80px;
+	height: 30px;
+}
+
+#player {
+	width: 200px; 
+	height: 300px; 
+	margin: 0 auto;
+	background: url(../assets/Heads/full.png) center no-repeat;
+	background-size: 100%;
+}
+
+	#player.half {
+		width: 200px; 
+		height: 300px; 
+		margin: 0 auto;
+		background: url(../assets/Heads/half.png) center no-repeat;
+		background-size: 100%;
+	}
+
+	#player.almost {
+		width: 200px; 
+		height: 300px; 
+		margin: 0 auto;
+		background: url(../assets/Heads/almost.png) center no-repeat;
+		background-size: 100%;
+	}
+
+	#player.dead {
+		width: 200px; 
+		height: 300px; 
+		margin: 0 auto;
+		background: url(../assets/Heads/done.png) center no-repeat;
+		background-size: 100%;
+	}
+
+#player-damage {
+	margin: -60px auto 20px auto;
+	width: 200px;
+}
+
+#player-health {
+	margin: 0 auto 20px auto;
+	width: 200px;
+	border: 1px solid #444444;
+}
+
+#player-health div {
+	height: 20px;
+	background-color: darkgreen;
+}
+
+	#player-health div.half {
+		height: 20px;
+		background-color: gold;
+	}
+
+	#player-health div.almost {
+		height: 20px;
+		background-color: darkred;
+	}
