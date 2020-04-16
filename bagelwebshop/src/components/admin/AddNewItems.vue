@@ -11,7 +11,10 @@
 						</v-text-field>
 						<v-text-field label="Price" required v-model="price">
 						</v-text-field>
-						<v-btn color="complete" v-on:click="addNewMenuItem">
+						
+						<v-file-input label="File input" @change="uploadImage"></v-file-input>
+
+						<v-btn color="complete" v-on:click="addNewMenuItem" :disabled="btnDisable">
 							Add Item
 						</v-btn>
 							<v-btn color="incomplete">
@@ -49,22 +52,45 @@
 </template>
 
 <script>
-import { dbMenuAdd } from '../../../firebase.js'
+/* eslint-disable no-unused-vars */
+import { dbMenuAdd, fb } from '../../../firebase.js'
 
 export default {
 	data() {
 		return {
 			name: '',
 			description: '',
-			price: ''			
+			price: '',
+			image: null,	
+			btnDisable: true,
 		}
 	},
 	methods: {
+		uploadImage(e){
+			let file = e;
+			console.log(e); 
+			var storageRef = fb.storage().ref('products/' + file.name);
+
+			let uploadTask = storageRef.put(file);
+
+			uploadTask.on('state_changed', (snapshot) => {
+			}, (error) =>  {
+
+			}, () => {
+				uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+					this.image = downloadURL;
+					this.btnDisable = false;	
+					console.log('File available at', downloadURL);
+				});
+			});
+		},
+
 		addNewMenuItem(){
 			dbMenuAdd.add({
 				name: this.name,
 				description: this.description,
 				price: this.price,
+				image: this.image
 			})
 		}
 	}

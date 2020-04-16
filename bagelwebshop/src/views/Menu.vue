@@ -7,6 +7,7 @@
 					<v-simple-table id="menu_table">
 							<thead>
 								<tr>
+									<th></th>
 									<th class="text-left" style="width:70%">Name of item</th>
 									<th class="text-left" style="width:100px">Price</th>
 									<th class="text-left" style="width:100px">Add to basket</th>
@@ -14,6 +15,9 @@
 							</thead>
 							<tbody>
 								<tr v-for="item in menuItems" :key="item.name">
+									<td id="td_img">
+										<v-img v-bind:src="item.image"></v-img>
+									</td>
 									<td>
 										<span id="td_name">{{ item.name }}</span> <br>
 										<span id="td_desc">{{ item.description }}</span>
@@ -72,7 +76,7 @@
 						</v-row>
 						<v-row>
 							<v-col>
-								<v-btn color="orange" class="mb-4">CheckOut</v-btn>
+								<v-btn color="orange" class="mb-4" v-on:click="addCheckoutItem()">CheckOut</v-btn>
 							</v-col>
 						</v-row>
 					</div>
@@ -83,70 +87,30 @@
 </template>
 
 <script>
+/* eslint-disable no-unused-vars */
 import { dbMenuAdd } from '../../firebase'
 
 export default {
     data () {
       return {
-		basket: [],
-        menuItems: [
-        /*  {
-			name: 'Frozen Yogurt',
-			description: 'Sugar, stuff and more sugar',
-            price: 159,
-          },
-          {
-			name: 'Ice cream sandwich',
-			description: 'Sugar, stuff and more sugar',
-            price: 237,
-          },
-          {
-			name: 'Eclair',
-			description: 'Sugar, stuff and more sugar',
-            price: 262,
-          },
-          {
-			name: 'Cupcake',
-			description: 'Sugar, stuff and more sugar',
-            price: 305,
-          },
-          {
-			name: 'Gingerbread',
-			description: 'Sugar, stuff and more sugar',
-            price: 356,
-          } */
-        ],
+		basketDump: [],
       }
 	},
-
-	created() {
-		dbMenuAdd.get().then((querySnapshot) => {
-			querySnapshot.forEach((doc => {
-				console.log(doc.id, " => ", doc.data());
-				var menuItemData = doc.data();
-				this.menuItems.push({
-					id: doc.id,
-					name: menuItemData.name,
-					description: menuItemData.description,
-					price: menuItemData.price
-				})
-			}))
-		})
+	beforeCreate() {
+		this.$store.dispatch('setMenuItems')
 	},
-
 	methods: {
+		addCheckoutItem(){
+			this.$store.dispatch('setCheckoutItem')
+		},
 		addToBasket(item) {
-			if(this.basket.find(itemInArray => item.name === itemInArray.name)){
-				item = this.basket.find(itemInArray => item.name === itemInArray.name);
-				this.increaseQtn(item);
-			}
-			else{
-				this.basket.push({
-					name: item.name,
-					price: item.price,
-					quantity: 1
-			})
-			}
+			this.basketDump.push({
+				name: item.name,
+				price: item.price,
+				quantity: 1
+			});
+			this.$store.commit('addBasketItems', this.basketDump);
+			this.basketDump = [];
 		},
 		increaseQtn(item) {
 			item.quantity++
@@ -161,6 +125,14 @@ export default {
 	},
 
 	computed: {
+		basket() {
+			// return this.$store.state.basketItems
+			return this.$store.getters.getBasketItems
+		},
+		menuItems() {
+			return this.$store.getters.getMenuItems
+		},
+
 		subTotal() {
 			var subCost = 0;
 			for(var items in this.basket){
@@ -197,6 +169,12 @@ export default {
 		font-weight: 300;
 		color: map-get($colorz, darkgrey);
 		font-size: 13px;
+	}
+
+	#td_img{
+		max-width: 40px;
+		max-height: 40px;
+		padding: 0;
 	}
 
 	tr td{

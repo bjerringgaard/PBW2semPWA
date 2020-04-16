@@ -24,6 +24,7 @@ export default {
 </script>
 
 <style lang="scss">
+
 main {
   background-image: url('./assets/bagels.jpg');
   background-size: cover;
@@ -41,7 +42,7 @@ main {
 			text-align: left;
 		}
 		
-	#info{
+	#info, #revenueList{
 		background-color: white;
   }
   

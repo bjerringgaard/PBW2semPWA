@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Menu from '../views/Menu.vue'
 import Admin from '../views/Admin.vue'
+import Orders from '../views/Orders.vue'
 import AddNewItems from '../components/admin/AddNewItems.vue'
 import Login from '../components/admin/Login.vue'
 import firebase from 'firebase'
@@ -34,6 +35,12 @@ const routes = [
     name: 'admin',
     meta: {requiresAuth : true},
     component: Admin
+  },
+  {
+    path: '/orders',
+    name: 'orders',
+    meta: {requiresAuth : true},
+    component: Orders
   },
   {
     path: '/addNew',

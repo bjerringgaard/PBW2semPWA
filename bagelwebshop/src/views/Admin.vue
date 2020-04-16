@@ -1,5 +1,19 @@
 <template>
 	<v-container>
+
+		<v-snackbar
+		v-model="updatedSucces" top
+		>
+		{{ updatedText }}
+		<v-btn
+			color="pink"
+			text
+			@click="updatedSucces = false"
+		>
+			Close
+		</v-btn>
+		</v-snackbar>
+
 		<v-row>
 			<v-col offset-md="1" md="5">
 				<div class="pa-2" id="info_box">
@@ -25,7 +39,7 @@
 									</td>
 									<td>{{ item.price }}</td>
 									<td>
-										<v-btn small text>
+										<v-btn small text v-on:click.stop="dialog = true" v-on:click="editItem(item)">
 											<v-icon color="orange">mdi-pencil</v-icon>
 										</v-btn>
 									</td>
@@ -48,6 +62,25 @@
 				</div>
 			</v-col>
 		</v-row>
+		<v-row>
+			<v-dialog
+				v-model="dialog"
+				max-width="400"
+				>
+				<v-card>
+					<div id="info_box">
+						<h1>Edit item</h1>
+						<div id="info">
+							<v-text-field v-model="item.name"></v-text-field>
+							<v-text-field v-model="item.description"></v-text-field>
+							<v-text-field v-model="item.price"></v-text-field>
+								<v-btn color="complete" v-on:click="updateItem()" v-on:click.stop="dialog = false">Edit</v-btn>
+								<v-btn color="incomplete" v-on:click.stop="dialog = false">Close</v-btn>
+						</div>
+					</div>
+				</v-card>
+			</v-dialog>
+		</v-row>
 	</v-container>
 </template>
 
@@ -58,26 +91,33 @@ export default {
     data () {
       return {
 		basket: [],
-        menuItems: [],
+		dialog: false,
+		item: [],
+		activeEditItem: null,
+		updatedSucces: false,
+		updatedText: 'Menu item has beed updated'
       }
 	},
-
-	created() {
-		dbMenuAdd.get().then((querySnapshot) => {
-			querySnapshot.forEach((doc => {
-				console.log(doc.id, " => ", doc.data());
-				var menuItemData = doc.data();
-				this.menuItems.push({
-					id: doc.id,
-					name: menuItemData.name,
-					description: menuItemData.description,
-					price: menuItemData.price
-				})
-			}))
-		})
+	beforeCreate() {
+		this.$store.dispatch('setMenuItems')
 	},
-
 	methods: {
+		editItem(item){
+			this.item = item
+			this.activeEditItem = item.id
+		},
+
+		updateItem(){
+			dbMenuAdd.doc(this.activeEditItem).update(this.item)
+			.then(() => {
+				this.updatedSucces= true;
+				console.log("Document successfully updated!");
+			})
+			.catch(function(error) {
+				console.error("Error updating document: ", error);
+			});
+		},
+
 		deleteItem(id){
 			dbMenuAdd.doc(id).delete().then(function(){
 			//	console.log("Item Deleted");
@@ -96,7 +136,7 @@ export default {
 					name: item.name,
 					price: item.price,
 					quantity: 1
-			})
+				})
 			}
 		},
 		increaseQtn(item) {
@@ -112,6 +152,9 @@ export default {
 	},
 
 	computed: {
+		menuItems() {
+			return this.$store.getters.getMenuItems
+		},
 		subTotal() {
 			var subCost = 0;
 			for(var items in this.basket){
@@ -142,9 +185,14 @@ export default {
 		.col:last-child h1 {
 			text-align: left;
 		}
-		
+
+	#info_box h1 {
+		color: black;
+	}
+
 	#info{
 		background-color: white;
+		padding: 10px;
 	}
 
 	tr th{
