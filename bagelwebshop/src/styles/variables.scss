@@ -9,3 +9,10 @@ $colorz: (
 	incomplete: #FF1212,
 	lightgrey: #cacaca
 );
+
+@mixin infobox_mixin($border-radius, $border-color, $padding, $margin-bottom, $color){
+	border: $border-radius solid $border-color;
+	padding: $padding;
+	margin-bottom: $margin-bottom;
+	color: $color;
+}
