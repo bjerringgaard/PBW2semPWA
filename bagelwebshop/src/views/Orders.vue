@@ -60,7 +60,6 @@
 								</tr>
 							</thead>
 							<tbody class="font-weight-light">
-								<!-- eslint-disable-next-line vue/no-use-v-if-with-v-for -->
 								<tr v-for="item in orderItems" :key="item.name" v-if="item.storeOrder == false">
 									<td>{{ item.orderNumber }}</td>
 									<td class="py-3"><p v-for="subitem in item.orderLines" :key="subitem.id" style="margin:0;">{{ subitem.quantity }}</p></td>
